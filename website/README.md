@@ -22,6 +22,7 @@ the **Deploy website to GitHub Pages** workflow from the Actions tab.
 ## Files
 
 - `index.html` — content and semantic structure;
+- `ru/index.html` — Russian version with shared styles and interactions;
 - `styles.css` — responsive layout and light/dark themes;
 - `app.js` — navigation, copy buttons, examples, and function filtering;
 - `favicon.svg` — browser icon matching the site brand mark;

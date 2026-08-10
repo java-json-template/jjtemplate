@@ -12,6 +12,8 @@
   <meta property="og:image" content="https://sibmaks.github.io/jjtemplate/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://sibmaks.github.io/jjtemplate/">
+  <link rel="alternate" hreflang="en" href="https://sibmaks.github.io/jjtemplate/">
+  <link rel="alternate" hreflang="ru" href="https://sibmaks.github.io/jjtemplate/ru/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>JJTemplate — Java JSON Template</title>
   <link rel="stylesheet" href="styles.css">
@@ -33,7 +35,7 @@
       <a href="#guidance">Guidance</a>
     </nav>
     <div class="top-actions">
-      <a class="text-link language-link" href="https://github.com/sibmaks/jjtemplate/blob/main/README.ru.md">RU</a>
+      <a class="text-link language-link" href="ru/" hreflang="ru" lang="ru">RU</a>
       <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch color theme">
         <span class="theme-icon" aria-hidden="true">◐</span>
       </button>
@@ -146,18 +148,24 @@
       <div class="panel code-panel wide-code">
         <div class="window-bar"><span>Java</span><button class="copy-button" data-copy-target="java-start" type="button">Copy</button></div>
         <pre id="java-start"><code><span class="tok-type">var</span> script = TemplateScript.builder()
-        .template(Map.of(
-                <span class="tok-string">"message"</span>, <span class="tok-string">"{{ string:concat 'Hello, ', .name }}"</span>,
-                <span class="tok-string">"active"</span>, <span class="tok-string">"{{ .enabled }}"</span>))
+        .template(
+                Map.of(
+                        <span class="tok-string">"message"</span>, <span class="tok-string">"{{ string:concat 'Hello, ', .name }}"</span>,
+                        <span class="tok-string">"active"</span>, <span class="tok-string">"{{ .enabled }}"</span>
+                )
+        )
         .build();
 
 <span class="tok-type">var</span> compiler = TemplateCompiler.getInstance();
 <span class="tok-type">var</span> compiled = compiler.compile(script);
 
 <span class="tok-comment">// Reuse compiled for every context.</span>
-<span class="tok-type">var</span> result = compiled.render(Map.of(
-        <span class="tok-string">"name"</span>, <span class="tok-string">"Alice"</span>,
-        <span class="tok-string">"enabled"</span>, <span class="tok-bool">true</span>));</code></pre>
+<span class="tok-type">var</span> result = compiled.render(
+        Map.of(
+                <span class="tok-string">"name"</span>, <span class="tok-string">"Alice"</span>,
+                <span class="tok-string">"enabled"</span>, <span class="tok-bool">true</span>
+        )
+);</code></pre>
       </div>
     </section>
 
@@ -174,6 +182,7 @@
         <article class="syntax-card"><code>{{. expression }}</code><h3>Spread</h3><p>Expand an object into an object or collection values into an array.</p></article>
         <article class="syntax-card"><code>.value | string:trim</code><h3>Pipe</h3><p>Pass the left-hand value into a function and compose transformations.</p></article>
         <article class="syntax-card"><code>.ready ? 'yes' : 'no'</code><h3>Ternary</h3><p>Choose a value inline; branches may contain calls, pipes, and nested expressions.</p></article>
+        <article class="syntax-card"><code>.repository?.foo('bar')</code><h3>Safe member access</h3><p>Return <code>null</code> when a property or matching method is absent; combine it with <code>default</code> for a fallback.</p></article>
       </div>
 
       <div class="callout">
@@ -193,6 +202,7 @@
         <button class="example-chip" type="button" role="tab" aria-selected="false" data-example="spread">Spread</button>
         <button class="example-chip" type="button" role="tab" aria-selected="false" data-example="range">Range</button>
         <button class="example-chip" type="button" role="tab" aria-selected="false" data-example="switch">Switch</button>
+        <button class="example-chip" type="button" role="tab" aria-selected="false" data-example="safe-access">Safe access</button>
       </div>
 
       <div class="example-stage panel">
@@ -363,7 +373,7 @@
     <nav aria-label="Footer navigation">
       <a href="https://github.com/sibmaks/jjtemplate">Repository</a>
       <a href="https://github.com/sibmaks/jjtemplate-plugin">IDEA plugin</a>
-      <a href="https://github.com/sibmaks/jjtemplate/blob/main/README.ru.md">Русский README</a>
+      <a href="ru/" hreflang="ru" lang="ru">Русская версия</a>
     </nav>
   </footer>
 </body>

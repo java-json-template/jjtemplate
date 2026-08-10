@@ -2,6 +2,9 @@ const root = document.documentElement;
 const themeButton = document.querySelector('#theme-toggle');
 const menuButton = document.querySelector('#menu-button');
 const mobileNav = document.querySelector('#mobile-nav');
+const copyMessages = root.lang === 'ru'
+  ? { success: 'Скопировано', failure: 'Выделите текст' }
+  : { success: 'Copied', failure: 'Select text' };
 
 const storedTheme = localStorage.getItem('jjt-theme');
 if (storedTheme === 'light' || storedTheme === 'dark') {
@@ -36,14 +39,14 @@ document.querySelectorAll('[data-copy-target]').forEach((button) => {
     try {
       await navigator.clipboard.writeText(target.innerText);
       const previousLabel = button.textContent;
-      button.textContent = 'Copied';
+      button.textContent = copyMessages.success;
       button.classList.add('is-copied');
       window.setTimeout(() => {
         button.textContent = previousLabel;
         button.classList.remove('is-copied');
       }, 1400);
     } catch {
-      button.textContent = 'Select text';
+      button.textContent = copyMessages.failure;
     }
   });
 });
@@ -134,6 +137,22 @@ const examples = {
 }`,
     output: `{
   "message": "Something went wrong"
+}`
+  },
+  'safe-access': {
+    input: `{
+  "definitions": [
+    { "repository": {} },
+    { "value": "hello" }
+  ],
+  "template": {
+    "on": "{{ default .repository?.on, false }}",
+    "suffix": "{{ default .value?.substring(1), 'missing' }}"
+  }
+}`,
+    output: `{
+  "on": false,
+  "suffix": "ello"
 }`
   }
 };
