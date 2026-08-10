@@ -112,6 +112,27 @@ final class ReflectionPropertySupport {
         }
     }
 
+    static Object getPropertyOrNull(Object obj, String name) {
+        if (obj == null || obj instanceof FieldResolver || obj instanceof Map<?, ?>) {
+            return getProperty(obj, name);
+        }
+        if (obj instanceof Map.Entry<?, ?>) {
+            var entryProperty = getMapEntryProperty((Map.Entry<?, ?>) obj, name);
+            if (entryProperty != PROPERTY_NOT_FOUND) {
+                return entryProperty;
+            }
+        }
+        if (isInt(name) && (obj.getClass().isArray()
+                || obj instanceof List<?>
+                || obj instanceof CharSequence)) {
+            return getProperty(obj, name);
+        }
+        if (resolveProperty(obj.getClass(), name).isPresent() || obj instanceof FieldFallbackResolver) {
+            return getProperty(obj, name);
+        }
+        return null;
+    }
+
     static Object getProperty(
             Object obj,
             String name,
@@ -131,6 +152,27 @@ final class ReflectionPropertySupport {
             }
         }
         return getProperty(obj, name);
+    }
+
+    static Object getPropertyOrNull(
+            Object obj,
+            String name,
+            List<ReflectionUtils.ResolvedProperty> properties
+    ) {
+        if (obj == null) {
+            return null;
+        }
+        for (var property : properties) {
+            if (!property.getOwnerType().isInstance(obj)) {
+                continue;
+            }
+            try {
+                return property.get(obj);
+            } catch (Throwable exception) {
+                throw new TemplateEvalException("Failed to access property '" + name + "' of " + obj.getClass(), exception);
+            }
+        }
+        return getPropertyOrNull(obj, name);
     }
 
     static Optional<ReflectionUtils.ResolvedProperty> resolveProperty(Class<?> type, String propertyName) {

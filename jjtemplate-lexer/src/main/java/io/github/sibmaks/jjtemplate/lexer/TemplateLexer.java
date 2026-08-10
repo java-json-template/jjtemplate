@@ -181,6 +181,10 @@ public final class TemplateLexer {
                 pos++;
                 return new Token(TokenType.COMMA, ",", start, pos);
             case '?':
+                if (peek2() == '.') {
+                    pos += 2;
+                    return new Token(TokenType.SAFE_DOT, "?.", start, pos);
+                }
                 pos++;
                 return new Token(TokenType.QUESTION, "?", start, pos);
             case ':':

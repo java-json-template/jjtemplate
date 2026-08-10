@@ -1,0 +1,9 @@
+{
+  "oldRepository": {},
+  "newRepository": {
+    "on": true
+  },
+  "disabledRepository": {
+    "on": false
+  }
+}

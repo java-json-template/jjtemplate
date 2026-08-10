@@ -1,0 +1,7 @@
+{
+  "template": {
+    "missing": "{{ default .oldRepository?.on, false }}",
+    "presentTrue": "{{ default .newRepository?.on, false }}",
+    "presentFalse": "{{ default .disabledRepository?.on, true }}"
+  }
+}

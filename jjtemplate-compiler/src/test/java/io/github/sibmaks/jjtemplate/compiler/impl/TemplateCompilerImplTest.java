@@ -284,6 +284,32 @@ class TemplateCompilerImplTest {
     }
 
     @Test
+    void compileWithTypedContextShouldSafelyReadPropertyMissingFromOldRuntimeType() {
+        var compiler = TemplateCompiler.getInstance();
+        var script = TemplateScript.builder()
+                .template("{{ default .repository?.on, false }}")
+                .build();
+        var context = new MapTemplateCompileContext(
+                Map.of("repository", List.of(OldRepository.class)),
+                TemplateTypeValidationMode.STRICT
+        );
+
+        var compiled = compiler.compile(script, context);
+
+        assertEquals(false, compiled.render(Map.of("repository", new OldRepository())));
+        assertEquals(true, compiled.render(Map.of("repository", new NewRepository())));
+
+        var newContext = new MapTemplateCompileContext(
+                Map.of("repository", List.of(NewRepository.class)),
+                TemplateTypeValidationMode.STRICT
+        );
+        var compiledForNewType = compiler.compile(script, newContext);
+
+        assertEquals(true, compiledForNewType.render(Map.of("repository", new NewRepository())));
+        assertEquals(false, compiledForNewType.render(Map.of("repository", new OldRepository())));
+    }
+
+    @Test
     void compileWithTypedContextShouldTreatMapAccessAsUnknown() {
         var compiler = TemplateCompiler.getInstance();
         var script = TemplateScript.builder()
@@ -508,6 +534,15 @@ class TemplateCompilerImplTest {
 
         public String upper() {
             return value.toUpperCase();
+        }
+    }
+
+    private static final class OldRepository {
+    }
+
+    private static final class NewRepository {
+        public boolean isOn() {
+            return true;
         }
     }
 

@@ -124,6 +124,18 @@ public final class ReflectionUtils {
     }
 
     /**
+     * Resolves a property, returning {@code null} when the property does not exist.
+     * Failures produced by an existing property accessor are still propagated.
+     *
+     * @param obj source object
+     * @param name property name or index
+     * @return resolved property value, or {@code null} when the property does not exist
+     */
+    public static Object getPropertyOrNull(Object obj, String name) {
+        return ReflectionPropertySupport.getPropertyOrNull(obj, name);
+    }
+
+    /**
      * Resolves a property using precomputed accessors when possible.
      *
      * @param obj        source object
@@ -137,6 +149,23 @@ public final class ReflectionUtils {
             List<ResolvedProperty> properties
     ) {
         return ReflectionPropertySupport.getProperty(obj, name, properties);
+    }
+
+    /**
+     * Resolves a property through pre-resolved accessors, returning {@code null}
+     * when no accessor matches and the runtime property does not exist.
+     *
+     * @param obj source object
+     * @param name property name or index
+     * @param properties pre-resolved accessors
+     * @return resolved property value, or {@code null} when the property does not exist
+     */
+    public static Object getPropertyOrNull(
+            Object obj,
+            String name,
+            List<ResolvedProperty> properties
+    ) {
+        return ReflectionPropertySupport.getPropertyOrNull(obj, name, properties);
     }
 
     /**

@@ -49,6 +49,11 @@ public enum TokenType {
     DOT,
 
     /**
+     * Safe property-access operator — {@code ?.}.
+     */
+    SAFE_DOT,
+
+    /**
      * Comma separator — {@code ,}, used to separate arguments.
      */
     COMMA,

@@ -134,13 +134,18 @@ final class TemplateExpressionVariableResolver {
     ) {
         if (chain instanceof VariableTemplateExpression.GetPropertyChain) {
             var property = (VariableTemplateExpression.GetPropertyChain) chain;
-            return resolveProperty(currentTypes, property.getPropertyName(), expressionText);
+            return resolveProperty(currentTypes, property.getPropertyName(), expressionText, false);
+        }
+        if (chain instanceof VariableTemplateExpression.SafeGetPropertyChain) {
+            var property = (VariableTemplateExpression.SafeGetPropertyChain) chain;
+            return resolveProperty(currentTypes, property.getPropertyName(), expressionText, true);
         }
         if (chain instanceof VariableTemplateExpression.CallMethodChain) {
             var method = (VariableTemplateExpression.CallMethodChain) chain;
             return resolveMethod(currentTypes, method, scope, expressionText, bindingEngine);
         }
         if (chain instanceof VariableTemplateExpression.BoundPropertyChain
+                || chain instanceof VariableTemplateExpression.SafeBoundPropertyChain
                 || chain instanceof VariableTemplateExpression.BoundMethodChain) {
             return new ChainResolution(ResolutionStatus.RESOLVED, currentTypes, chain, null);
         }
@@ -150,7 +155,8 @@ final class TemplateExpressionVariableResolver {
     private ChainResolution resolveProperty(
             CompileTypeSet currentTypes,
             String propertyName,
-            String expressionText
+            String expressionText,
+            boolean safe
     ) {
         var resolvedProperties = new ArrayList<ReflectionUtils.ResolvedProperty>(currentTypes.types().size());
         var nextTypes = new LinkedHashSet<Class<?>>();
@@ -199,20 +205,25 @@ final class TemplateExpressionVariableResolver {
             }
         }
 
-        if (validationMode == TemplateTypeValidationMode.STRICT && hasInvalid) {
+        if (!safe && validationMode == TemplateTypeValidationMode.STRICT && hasInvalid) {
             return invalidProperty(expressionText, propertyName, currentTypes.types());
         }
         if (hasUnknown) {
             return new ChainResolution(ResolutionStatus.UNKNOWN, CompileTypeSet.unknown(), null, null);
         }
-        if (hasInvalid) {
+        if (!safe && hasInvalid) {
             return invalidProperty(expressionText, propertyName, currentTypes.types());
+        }
+        if (safe && nextTypes.isEmpty()) {
+            return new ChainResolution(ResolutionStatus.UNKNOWN, CompileTypeSet.unknown(), null, null);
         }
         return new ChainResolution(
                 ResolutionStatus.RESOLVED,
                 CompileTypeSet.known(nextTypes),
                 resolvedProperties.isEmpty()
                         ? null
+                        : safe
+                        ? new VariableTemplateExpression.SafeBoundPropertyChain(propertyName, resolvedProperties)
                         : new VariableTemplateExpression.BoundPropertyChain(propertyName, resolvedProperties),
                 null
         );

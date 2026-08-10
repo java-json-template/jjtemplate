@@ -107,6 +107,29 @@ public final class VariableTemplateExpression implements TemplateExpression {
     }
 
     /**
+     * Chain element that resolves a property and returns {@code null} when it does not exist.
+     */
+    @ToString
+    public static final class SafeGetPropertyChain implements Chain {
+        @Getter
+        private final String propertyName;
+
+        /**
+         * Creates a safe reflective property-access step.
+         *
+         * @param propertyName property name
+         */
+        public SafeGetPropertyChain(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        @Override
+        public Object apply(final Context context, final Object o) {
+            return ReflectionUtils.getPropertyOrNull(o, propertyName);
+        }
+    }
+
+    /**
      * Chain element that uses pre-resolved property accessors for known types.
      */
     @Getter
@@ -132,6 +155,35 @@ public final class VariableTemplateExpression implements TemplateExpression {
         @Override
         public Object apply(Context context, Object o) {
             return ReflectionUtils.getProperty(o, propertyName, resolvedProperties);
+        }
+    }
+
+    /**
+     * Chain element that uses pre-resolved property accessors and safely handles a missing runtime property.
+     */
+    @Getter
+    @ToString
+    public static final class SafeBoundPropertyChain implements Chain {
+        private final String propertyName;
+        private final List<ReflectionUtils.ResolvedProperty> resolvedProperties;
+
+        /**
+         * Creates a safe bound property-access step.
+         *
+         * @param propertyName property name
+         * @param resolvedProperties accessors for known receiver types
+         */
+        public SafeBoundPropertyChain(
+                String propertyName,
+                List<ReflectionUtils.ResolvedProperty> resolvedProperties
+        ) {
+            this.propertyName = propertyName;
+            this.resolvedProperties = resolvedProperties;
+        }
+
+        @Override
+        public Object apply(Context context, Object o) {
+            return ReflectionUtils.getPropertyOrNull(o, propertyName, resolvedProperties);
         }
     }
 

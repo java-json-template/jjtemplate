@@ -301,6 +301,24 @@ Call syntax uses a colon (`:`), e.g. `{{ cast:str .value }}` or `{{ .text | stri
 
 ---
 
+### Safe Property Access
+
+Use `?.` when a property may not exist on the runtime object. A missing property
+is resolved as `null`, so it can be combined with `default`:
+
+```json
+{
+  "on": "{{ default .repository?.on, false }}"
+}
+```
+
+For Java beans, `?.on` resolves either a public `on` field or a zero-argument
+`getOn()` / `isOn()` accessor. Safe access does not hide exceptions thrown by an
+existing accessor. It applies to properties only; method calls continue to use
+the regular `.` operator.
+
+---
+
 ### Logical and Comparison Operators
 
 (These remain **global**, without namespace.)

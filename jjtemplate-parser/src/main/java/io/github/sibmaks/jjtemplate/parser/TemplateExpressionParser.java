@@ -215,18 +215,23 @@ final class TemplateExpressionParser {
         cursor.expect(TokenType.DOT, ".");
         var segments = new ArrayList<VariableExpression.Segment>();
 
+        var safe = false;
         do {
             var ident = cursor.expect(TokenType.IDENT, "identifier after '.'");
-            var segment = parseMethodCallArguments(ident);
+            var segment = parseMethodCallArguments(ident, safe);
             segments.add(segment);
-        } while (cursor.match(TokenType.DOT));
+            safe = cursor.match(TokenType.SAFE_DOT);
+        } while (safe || cursor.match(TokenType.DOT));
 
         return new VariableExpression(segments);
     }
 
-    private VariableExpression.Segment parseMethodCallArguments(Token ident) {
+    private VariableExpression.Segment parseMethodCallArguments(Token ident, boolean safe) {
         if (!cursor.match(TokenType.LPAREN)) {
-            return new VariableExpression.Segment(ident.lexeme);
+            return new VariableExpression.Segment(ident.lexeme, safe);
+        }
+        if (safe) {
+            throw cursor.error("Safe access is supported for properties only");
         }
         var args = new ArrayList<Expression>();
         if (!cursor.check(TokenType.RPAREN)) {

@@ -51,8 +51,9 @@ public final class ExpressionSourceRenderer implements ExpressionVisitor<String>
             return ".";
         }
         var builder = new StringBuilder();
-        for (var segment : expr.segments) {
-            builder.append('.').append(segment.name);
+        for (int i = 0; i < expr.segments.size(); i++) {
+            var segment = expr.segments.get(i);
+            builder.append(i > 0 && segment.isSafe() ? "?." : ".").append(segment.name);
             if (segment.isMethod()) {
                 builder.append('(')
                         .append(segment.args.stream().map(this::render).collect(Collectors.joining(", ")))

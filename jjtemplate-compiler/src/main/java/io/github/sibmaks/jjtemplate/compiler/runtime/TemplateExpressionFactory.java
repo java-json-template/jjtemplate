@@ -140,7 +140,11 @@ public final class TemplateExpressionFactory implements ExpressionVisitor<Templa
         for (int i = 1; i < segments.size(); i++) {
             var segment = segments.get(i);
             if (!segment.isMethod()) {
-                callChain.add(new VariableTemplateExpression.GetPropertyChain(segment.name));
+                if (segment.isSafe()) {
+                    callChain.add(new VariableTemplateExpression.SafeGetPropertyChain(segment.name));
+                } else {
+                    callChain.add(new VariableTemplateExpression.GetPropertyChain(segment.name));
+                }
                 continue;
             }
             var argExpressions = new ArrayList<TemplateExpression>(segment.args.size());

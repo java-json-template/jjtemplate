@@ -57,6 +57,11 @@ public final class VariableExpression implements Expression {
         @Getter
         public final boolean method;
         /**
+         * Whether a missing property should resolve to {@code null}.
+         */
+        @Getter
+        public final boolean safe;
+        /**
          * The list of argument expressions if this segment is a method call; empty otherwise.
          */
         public final List<Expression> args;
@@ -70,6 +75,7 @@ public final class VariableExpression implements Expression {
         public Segment(String name, List<Expression> args) {
             this.name = name;
             this.method = true;
+            this.safe = false;
             this.args = args;
         }
 
@@ -79,8 +85,19 @@ public final class VariableExpression implements Expression {
          * @param name the field name
          */
         public Segment(String name) {
+            this(name, false);
+        }
+
+        /**
+         * Creates a {@code Segment} representing a field access.
+         *
+         * @param name the field name
+         * @param safe whether a missing field should resolve to {@code null}
+         */
+        public Segment(String name, boolean safe) {
             this.name = name;
             this.method = false;
+            this.safe = safe;
             this.args = List.of();
         }
     }

@@ -166,6 +166,25 @@ class ReflectionUtilsTest {
     }
 
     @Test
+    void getPropertyOrNullReturnsNullForUnknownField() {
+        class Dummy {
+        }
+
+        assertNull(ReflectionUtils.getPropertyOrNull(new Dummy(), "unknown"));
+    }
+
+    @Test
+    void getPropertyOrNullDoesNotHideKnownGetterFailure() {
+        var exception = assertThrows(
+                TemplateEvalException.class,
+                () -> ReflectionUtils.getPropertyOrNull(new BrokenProperty(), "boom")
+        );
+
+        assertTrue(exception.getMessage().contains("Failed to access property 'boom'"));
+        assertNotNull(exception.getCause());
+    }
+
+    @Test
     void getPropertyNullReturnsNull() {
         assertNull(ReflectionUtils.getProperty(null, "any"));
     }

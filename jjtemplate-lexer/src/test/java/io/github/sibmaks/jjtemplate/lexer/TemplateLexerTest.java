@@ -10,7 +10,9 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -421,6 +423,24 @@ class TemplateLexerTest {
         assertEquals(3 + 1 + varName.length() + 1, endToken.start);
         assertEquals(3 + 1 + varName.length() + 1 + 2, endToken.end);
         assertEquals("}}", endToken.lexeme);
+    }
+
+    @Test
+    void safePropertyAccess() {
+        var tokens = new TemplateLexer("{{ .repository?.on }}").tokens();
+
+        assertEquals(
+                List.of(
+                        TokenType.OPEN_EXPR,
+                        TokenType.DOT,
+                        TokenType.IDENT,
+                        TokenType.SAFE_DOT,
+                        TokenType.IDENT,
+                        TokenType.CLOSE
+                ),
+                tokens.stream().map(token -> token.type).collect(Collectors.toList())
+        );
+        assertEquals("?.", tokens.get(3).lexeme);
     }
 
     @Test
