@@ -7,6 +7,13 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [1.0.0-rc4] - 2026-08-10
+
+### Added
+
+- Added the `?.` safe member access operator. Missing Java Bean properties and method calls without a matching
+  runtime method now resolve to `null`, while exceptions from existing accessors and matched methods still propagate.
+
 ## [1.0.0-rc3] - 2026-08-02
 
 ### Added
