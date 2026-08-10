@@ -23,7 +23,23 @@ final class ReflectionMethodSupport {
     };
 
     static Object invokeMethodReflective(Object target, String methodName, List<Object> args) {
+        return invokeMethodReflective(target, methodName, args, false);
+    }
+
+    static Object invokeMethodReflectiveOrNull(Object target, String methodName, List<Object> args) {
+        return invokeMethodReflective(target, methodName, args, true);
+    }
+
+    private static Object invokeMethodReflective(
+            Object target,
+            String methodName,
+            List<Object> args,
+            boolean safe
+    ) {
         if (target == null) {
+            if (safe) {
+                return null;
+            }
             throw new TemplateEvalException("Cannot call method on null target");
         }
 
@@ -40,6 +56,9 @@ final class ReflectionMethodSupport {
             if (target instanceof MethodFallbackResolver) {
                 var fallbackResolver = (MethodFallbackResolver) target;
                 return fallbackResolver.resolve(methodName, args.toArray());
+            }
+            if (safe) {
+                return null;
             }
             throw new TemplateEvalException("No matching method " + methodName + " found for args " + args);
         }
@@ -101,7 +120,29 @@ final class ReflectionMethodSupport {
             List<Object> args,
             List<ReflectionUtils.ResolvedMethod> resolvedMethods
     ) {
+        return invokeMethodReflective(target, methodName, args, resolvedMethods, false);
+    }
+
+    static Object invokeMethodReflectiveOrNull(
+            Object target,
+            String methodName,
+            List<Object> args,
+            List<ReflectionUtils.ResolvedMethod> resolvedMethods
+    ) {
+        return invokeMethodReflective(target, methodName, args, resolvedMethods, true);
+    }
+
+    private static Object invokeMethodReflective(
+            Object target,
+            String methodName,
+            List<Object> args,
+            List<ReflectionUtils.ResolvedMethod> resolvedMethods,
+            boolean safe
+    ) {
         if (target == null) {
+            if (safe) {
+                return null;
+            }
             throw new TemplateEvalException("Cannot call method on null target");
         }
         for (var resolvedMethod : resolvedMethods) {
@@ -114,7 +155,7 @@ final class ReflectionMethodSupport {
                 throw ReflectionUtils.methodInvocationError(methodName, exception);
             }
         }
-        return invokeMethodReflective(target, methodName, args);
+        return invokeMethodReflective(target, methodName, args, safe);
     }
 
     static List<ReflectionUtils.ResolvedMethod> resolveMethods(

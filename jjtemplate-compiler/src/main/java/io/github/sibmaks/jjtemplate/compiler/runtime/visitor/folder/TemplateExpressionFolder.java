@@ -419,7 +419,8 @@ public final class TemplateExpressionFolder implements TemplateExpressionVisitor
                     newCallChain.add(
                             new VariableTemplateExpression.CallMethodChain(
                                     callMethodChain.getMethodName(),
-                                    args
+                                    args,
+                                    callMethodChain.isSafe()
                             )
                     );
                 } else {
@@ -444,7 +445,8 @@ public final class TemplateExpressionFolder implements TemplateExpressionVisitor
                             new VariableTemplateExpression.BoundMethodChain(
                                     callMethodChain.getMethodName(),
                                     args,
-                                    callMethodChain.getResolvedMethods()
+                                    callMethodChain.getResolvedMethods(),
+                                    callMethodChain.isSafe()
                             )
                     );
                 } else {

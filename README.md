@@ -301,7 +301,7 @@ Call syntax uses a colon (`:`), e.g. `{{ cast:str .value }}` or `{{ .text | stri
 
 ---
 
-### Safe Property Access
+### Safe Member Access
 
 Use `?.` when a property may not exist on the runtime object. A missing property
 is resolved as `null`, so it can be combined with `default`:
@@ -313,9 +313,17 @@ is resolved as `null`, so it can be combined with `default`:
 ```
 
 For Java beans, `?.on` resolves either a public `on` field or a zero-argument
-`getOn()` / `isOn()` accessor. Safe access does not hide exceptions thrown by an
-existing accessor. It applies to properties only; method calls continue to use
-the regular `.` operator.
+`getOn()` / `isOn()` accessor. The same operator safely calls methods:
+
+```json
+{
+  "value": "{{ default .repository?.foo('bar'), false }}"
+}
+```
+
+If no method matches the supplied arguments, the call resolves as `null`. Safe
+access does not hide exceptions thrown by an existing property accessor or a
+matching method.
 
 ---
 

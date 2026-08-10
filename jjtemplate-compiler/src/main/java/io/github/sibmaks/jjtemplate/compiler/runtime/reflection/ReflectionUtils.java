@@ -181,6 +181,19 @@ public final class ReflectionUtils {
     }
 
     /**
+     * Invokes a matching method, returning {@code null} when no matching method exists.
+     * Exceptions thrown by an existing method are still propagated.
+     *
+     * @param target invocation target
+     * @param methodName method name
+     * @param args method arguments
+     * @return method result, or {@code null} when no matching method exists
+     */
+    public static Object invokeMethodReflectiveOrNull(Object target, String methodName, List<Object> args) {
+        return ReflectionMethodSupport.invokeMethodReflectiveOrNull(target, methodName, args);
+    }
+
+    /**
      * Invokes a method using pre-resolved handlers when possible.
      *
      * @param target          invocation target
@@ -196,6 +209,25 @@ public final class ReflectionUtils {
             List<ResolvedMethod> resolvedMethods
     ) {
         return ReflectionMethodSupport.invokeMethodReflective(target, methodName, args, resolvedMethods);
+    }
+
+    /**
+     * Invokes a pre-resolved matching method when possible, returning {@code null}
+     * when no matching runtime method exists.
+     *
+     * @param target invocation target
+     * @param methodName method name
+     * @param args method arguments
+     * @param resolvedMethods pre-resolved methods
+     * @return method result, or {@code null} when no matching method exists
+     */
+    public static Object invokeMethodReflectiveOrNull(
+            Object target,
+            String methodName,
+            List<Object> args,
+            List<ResolvedMethod> resolvedMethods
+    ) {
+        return ReflectionMethodSupport.invokeMethodReflectiveOrNull(target, methodName, args, resolvedMethods);
     }
 
     /**

@@ -172,7 +172,8 @@ public final class TemplateExpressionVariableInliner implements TemplateExpressi
                 if (localAnyArgInlined) {
                     callMethodChain = new VariableTemplateExpression.CallMethodChain(
                             callMethodChain.getMethodName(),
-                            inlinedArguments
+                            inlinedArguments,
+                            callMethodChain.isSafe()
                     );
                 }
                 if (folding) {
@@ -197,7 +198,8 @@ public final class TemplateExpressionVariableInliner implements TemplateExpressi
                     callMethodChain = new VariableTemplateExpression.BoundMethodChain(
                             callMethodChain.getMethodName(),
                             inlinedArguments,
-                            callMethodChain.getResolvedMethods()
+                            callMethodChain.getResolvedMethods(),
+                            callMethodChain.isSafe()
                     );
                 }
                 if (folding) {

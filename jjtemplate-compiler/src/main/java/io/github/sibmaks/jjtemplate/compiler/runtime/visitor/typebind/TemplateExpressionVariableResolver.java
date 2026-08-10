@@ -112,7 +112,11 @@ final class TemplateExpressionVariableResolver {
                     args.add(bound);
                 }
                 if (argsChanged) {
-                    preparedChains.add(new VariableTemplateExpression.CallMethodChain(call.getMethodName(), args));
+                    preparedChains.add(new VariableTemplateExpression.CallMethodChain(
+                            call.getMethodName(),
+                            args,
+                            call.isSafe()
+                    ));
                     changed = true;
                     continue;
                 }
@@ -142,7 +146,7 @@ final class TemplateExpressionVariableResolver {
         }
         if (chain instanceof VariableTemplateExpression.CallMethodChain) {
             var method = (VariableTemplateExpression.CallMethodChain) chain;
-            return resolveMethod(currentTypes, method, scope, expressionText, bindingEngine);
+            return resolveMethod(currentTypes, method, scope, expressionText, bindingEngine, method.isSafe());
         }
         if (chain instanceof VariableTemplateExpression.BoundPropertyChain
                 || chain instanceof VariableTemplateExpression.SafeBoundPropertyChain
@@ -234,7 +238,8 @@ final class TemplateExpressionVariableResolver {
             VariableTemplateExpression.CallMethodChain method,
             CompileScope scope,
             String expressionText,
-            TemplateExpressionBindingEngine bindingEngine
+            TemplateExpressionBindingEngine bindingEngine,
+            boolean safe
     ) {
         var argTypes = new ArrayList<Class<?>>(method.getArgsExpressions().size());
         for (var arg : method.getArgsExpressions()) {
@@ -265,14 +270,17 @@ final class TemplateExpressionVariableResolver {
             }
         }
 
-        if (validationMode == TemplateTypeValidationMode.STRICT && (hasUnknown || hasInvalid)) {
+        if (!safe && validationMode == TemplateTypeValidationMode.STRICT && (hasUnknown || hasInvalid)) {
             return invalidMethod(expressionText, method.getMethodName(), currentTypes.types());
         }
         if (hasUnknown) {
             return new ChainResolution(ResolutionStatus.UNKNOWN, CompileTypeSet.unknown(), null, null);
         }
-        if (hasInvalid) {
+        if (!safe && hasInvalid) {
             return invalidMethod(expressionText, method.getMethodName(), currentTypes.types());
+        }
+        if (safe && nextTypes.isEmpty()) {
+            return new ChainResolution(ResolutionStatus.UNKNOWN, CompileTypeSet.unknown(), null, null);
         }
         return new ChainResolution(
                 ResolutionStatus.RESOLVED,
@@ -282,7 +290,8 @@ final class TemplateExpressionVariableResolver {
                         : new VariableTemplateExpression.BoundMethodChain(
                                 method.getMethodName(),
                                 method.getArgsExpressions(),
-                                resolvedMethods
+                                resolvedMethods,
+                                safe
                         ),
                 null
         );

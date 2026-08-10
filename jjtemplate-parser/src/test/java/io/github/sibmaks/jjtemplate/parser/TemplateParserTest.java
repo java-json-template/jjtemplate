@@ -161,6 +161,30 @@ class TemplateParserTest {
     }
 
     @Test
+    void safeMethodInVariableChain() {
+        var tokens = List.of(
+                new Token(TokenType.DOT, ".", 0, 1),
+                new Token(TokenType.IDENT, "repository", 1, 11),
+                new Token(TokenType.SAFE_DOT, "?.", 11, 13),
+                new Token(TokenType.IDENT, "foo", 13, 16),
+                new Token(TokenType.LPAREN, "(", 16, 17),
+                new Token(TokenType.STRING, "bar", 17, 22),
+                new Token(TokenType.RPAREN, ")", 22, 23)
+        );
+
+        var expression = new TemplateParser(tokens).parseExpression();
+
+        var variableExpression = assertInstanceOf(VariableExpression.class, expression);
+        assertEquals(
+                List.of(
+                        new VariableExpression.Segment("repository"),
+                        new VariableExpression.Segment("foo", List.of(new LiteralExpression("bar")), true)
+                ),
+                variableExpression.segments
+        );
+    }
+
+    @Test
     void callMethodInChain() {
         var varName = "varName";
         var methodName = "methoName";

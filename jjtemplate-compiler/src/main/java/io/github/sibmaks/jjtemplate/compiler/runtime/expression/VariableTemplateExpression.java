@@ -199,6 +199,7 @@ public final class VariableTemplateExpression implements TemplateExpression {
     public static final class CallMethodChain implements Chain {
         private final String methodName;
         private final List<TemplateExpression> argsExpressions;
+        private final boolean safe;
 
         /**
          * Creates a reflective method-call step.
@@ -207,8 +208,24 @@ public final class VariableTemplateExpression implements TemplateExpression {
          * @param argsExpressions argument expressions
          */
         public CallMethodChain(String methodName, List<TemplateExpression> argsExpressions) {
+            this(methodName, argsExpressions, false);
+        }
+
+        /**
+         * Creates a reflective method-call step.
+         *
+         * @param methodName method name
+         * @param argsExpressions method argument expressions
+         * @param safe whether a missing matching method should resolve to {@code null}
+         */
+        public CallMethodChain(
+                String methodName,
+                List<TemplateExpression> argsExpressions,
+                boolean safe
+        ) {
             this.methodName = methodName;
             this.argsExpressions = argsExpressions;
+            this.safe = safe;
         }
 
         @Override
@@ -216,6 +233,9 @@ public final class VariableTemplateExpression implements TemplateExpression {
             var args = argsExpressions.stream()
                     .map(it -> it.apply(context))
                     .collect(Collectors.toList());
+            if (safe) {
+                return ReflectionUtils.invokeMethodReflectiveOrNull(o, methodName, args);
+            }
             return ReflectionUtils.invokeMethodReflective(o, methodName, args);
         }
     }
@@ -229,6 +249,7 @@ public final class VariableTemplateExpression implements TemplateExpression {
         private final String methodName;
         private final List<TemplateExpression> argsExpressions;
         private final List<ReflectionUtils.ResolvedMethod> resolvedMethods;
+        private final boolean safe;
 
         /**
          * Creates a bound method-call step.
@@ -242,9 +263,27 @@ public final class VariableTemplateExpression implements TemplateExpression {
                 List<TemplateExpression> argsExpressions,
                 List<ReflectionUtils.ResolvedMethod> resolvedMethods
         ) {
+            this(methodName, argsExpressions, resolvedMethods, false);
+        }
+
+        /**
+         * Creates a bound method-call step.
+         *
+         * @param methodName method name
+         * @param argsExpressions method argument expressions
+         * @param resolvedMethods methods for known receiver types
+         * @param safe whether a missing matching method should resolve to {@code null}
+         */
+        public BoundMethodChain(
+                String methodName,
+                List<TemplateExpression> argsExpressions,
+                List<ReflectionUtils.ResolvedMethod> resolvedMethods,
+                boolean safe
+        ) {
             this.methodName = methodName;
             this.argsExpressions = argsExpressions;
             this.resolvedMethods = resolvedMethods;
+            this.safe = safe;
         }
 
         @Override
@@ -252,6 +291,9 @@ public final class VariableTemplateExpression implements TemplateExpression {
             var args = argsExpressions.stream()
                     .map(it -> it.apply(context))
                     .collect(Collectors.toList());
+            if (safe) {
+                return ReflectionUtils.invokeMethodReflectiveOrNull(o, methodName, args, resolvedMethods);
+            }
             return ReflectionUtils.invokeMethodReflective(o, methodName, args, resolvedMethods);
         }
     }

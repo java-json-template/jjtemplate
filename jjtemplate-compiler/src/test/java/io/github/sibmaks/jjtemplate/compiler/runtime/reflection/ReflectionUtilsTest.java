@@ -386,6 +386,30 @@ class ReflectionUtilsTest {
     }
 
     @Test
+    void invokeMethodReflectiveOrNullReturnsNullForMissingMethod() {
+        assertNull(ReflectionUtils.invokeMethodReflectiveOrNull(new Person(), "doesNotExist", List.of("bar")));
+    }
+
+    @Test
+    void invokeMethodReflectiveOrNullInvokesMatchingMethod() {
+        assertEquals(
+                "Hi John",
+                ReflectionUtils.invokeMethodReflectiveOrNull(new Person(), "greet", List.of("Hi"))
+        );
+    }
+
+    @Test
+    void invokeMethodReflectiveOrNullDoesNotHideKnownMethodFailure() {
+        var exception = assertThrows(
+                TemplateEvalException.class,
+                () -> ReflectionUtils.invokeMethodReflectiveOrNull(new BrokenMethod(), "explode", List.of())
+        );
+
+        assertTrue(exception.getMessage().contains("Error invoking method explode"));
+        assertNotNull(exception.getCause());
+    }
+
+    @Test
     void invokeOnNullTargetThrows() {
         var args = List.of();
         var ex = assertThrows(TemplateEvalException.class, () ->

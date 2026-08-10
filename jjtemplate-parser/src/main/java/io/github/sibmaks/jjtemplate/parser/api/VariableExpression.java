@@ -73,9 +73,20 @@ public final class VariableExpression implements Expression {
          * @param args the list of argument expressions for the method
          */
         public Segment(String name, List<Expression> args) {
+            this(name, args, false);
+        }
+
+        /**
+         * Creates a {@code Segment} representing a method call.
+         *
+         * @param name the method name
+         * @param args the list of argument expressions for the method
+         * @param safe whether a missing matching method should resolve to {@code null}
+         */
+        public Segment(String name, List<Expression> args, boolean safe) {
             this.name = name;
             this.method = true;
-            this.safe = false;
+            this.safe = safe;
             this.args = args;
         }
 

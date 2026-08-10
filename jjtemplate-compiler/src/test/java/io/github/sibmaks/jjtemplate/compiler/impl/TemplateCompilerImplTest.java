@@ -310,6 +310,32 @@ class TemplateCompilerImplTest {
     }
 
     @Test
+    void compileWithTypedContextShouldSafelyCallMethodMissingFromOldRuntimeType() {
+        var compiler = TemplateCompiler.getInstance();
+        var script = TemplateScript.builder()
+                .template("{{ default .repository?.foo('bar'), 'missing' }}")
+                .build();
+        var oldContext = new MapTemplateCompileContext(
+                Map.of("repository", List.of(OldRepository.class)),
+                TemplateTypeValidationMode.STRICT
+        );
+
+        var compiledForOldType = compiler.compile(script, oldContext);
+
+        assertEquals("missing", compiledForOldType.render(Map.of("repository", new OldRepository())));
+        assertEquals("called:bar", compiledForOldType.render(Map.of("repository", new NewRepository())));
+
+        var newContext = new MapTemplateCompileContext(
+                Map.of("repository", List.of(NewRepository.class)),
+                TemplateTypeValidationMode.STRICT
+        );
+        var compiledForNewType = compiler.compile(script, newContext);
+
+        assertEquals("called:bar", compiledForNewType.render(Map.of("repository", new NewRepository())));
+        assertEquals("missing", compiledForNewType.render(Map.of("repository", new OldRepository())));
+    }
+
+    @Test
     void compileWithTypedContextShouldTreatMapAccessAsUnknown() {
         var compiler = TemplateCompiler.getInstance();
         var script = TemplateScript.builder()
@@ -543,6 +569,10 @@ class TemplateCompilerImplTest {
     private static final class NewRepository {
         public boolean isOn() {
             return true;
+        }
+
+        public String foo(String value) {
+            return "called:" + value;
         }
     }
 

@@ -1,0 +1,7 @@
+{
+  "template": {
+    "existing": "{{ default .value?.substring(1), 'missing' }}",
+    "missing": "{{ default .value?.doesNotExist('bar'), 'missing' }}",
+    "incompatible": "{{ default .value?.substring('bar'), 'missing' }}"
+  }
+}

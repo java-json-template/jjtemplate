@@ -151,7 +151,11 @@ public final class TemplateExpressionFactory implements ExpressionVisitor<Templa
             for (var argExpr : segment.args) {
                 argExpressions.add(compile(argExpr));
             }
-            callChain.add(new VariableTemplateExpression.CallMethodChain(segment.name, argExpressions));
+            callChain.add(new VariableTemplateExpression.CallMethodChain(
+                    segment.name,
+                    argExpressions,
+                    segment.isSafe()
+            ));
         }
 
         return new VariableTemplateExpression(rootName, callChain, sourceRenderer.render(expr));

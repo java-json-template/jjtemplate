@@ -230,9 +230,6 @@ final class TemplateExpressionParser {
         if (!cursor.match(TokenType.LPAREN)) {
             return new VariableExpression.Segment(ident.lexeme, safe);
         }
-        if (safe) {
-            throw cursor.error("Safe access is supported for properties only");
-        }
         var args = new ArrayList<Expression>();
         if (!cursor.check(TokenType.RPAREN)) {
             do {
@@ -240,7 +237,7 @@ final class TemplateExpressionParser {
             } while (cursor.match(TokenType.COMMA));
         }
         cursor.expect(TokenType.RPAREN, ")");
-        return new VariableExpression.Segment(ident.lexeme, args);
+        return new VariableExpression.Segment(ident.lexeme, args, safe);
     }
 
     /**
