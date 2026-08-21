@@ -9,9 +9,9 @@ fun configureCommonPom(pom: MavenPom) {
         }
     }
     pom.scm {
-        connection.set("scm:https://github.com/sibmaks/jjtemplate.git")
-        developerConnection.set("scm:git:ssh://github.com/sibmaks")
-        url.set("https://github.com/sibmaks/jjtemplate")
+        connection.set("scm:https://github.com/java-json-template/jjtemplate.git")
+        developerConnection.set("scm:git:ssh://github.com/java-json-template")
+        url.set("https://github.com/java-json-template/jjtemplate")
     }
     pom.developers {
         developer {

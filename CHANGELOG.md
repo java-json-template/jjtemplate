@@ -123,11 +123,11 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Added source rendering for compiled expressions so runtime failures include the expression that caused the error.
 - Added integration coverage for date and datetime formatting expressions.
 
-[Unreleased]: https://github.com/sibmaks/jjtemplate/compare/v1.0.0-rc1...HEAD
-[1.0.0-rc2]: https://github.com/sibmaks/jjtemplate/compare/v1.0.0-rc1...v1.0.0-rc2
-[1.0.0-rc1]: https://github.com/sibmaks/jjtemplate/compare/v0.9.2...v1.0.0-rc1
-[0.9.2]: https://github.com/sibmaks/jjtemplate/compare/v0.9.1...v0.9.2
-[0.9.1]: https://github.com/sibmaks/jjtemplate/compare/v0.9.0...v0.9.1
-[0.9.0]: https://github.com/sibmaks/jjtemplate/compare/v0.8.1...v0.9.0
-[0.8.1]: https://github.com/sibmaks/jjtemplate/compare/v0.8.0...v0.8.1
-[0.8.0]: https://github.com/sibmaks/jjtemplate/compare/v0.7.1...v0.8.0
+[Unreleased]: https://github.com/java-json-template/jjtemplate/compare/v1.0.0-rc1...HEAD
+[1.0.0-rc2]: https://github.com/java-json-template/jjtemplate/compare/v1.0.0-rc1...v1.0.0-rc2
+[1.0.0-rc1]: https://github.com/java-json-template/jjtemplate/compare/v0.9.2...v1.0.0-rc1
+[0.9.2]: https://github.com/java-json-template/jjtemplate/compare/v0.9.1...v0.9.2
+[0.9.1]: https://github.com/java-json-template/jjtemplate/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/java-json-template/jjtemplate/compare/v0.8.1...v0.9.0
+[0.8.1]: https://github.com/java-json-template/jjtemplate/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/java-json-template/jjtemplate/compare/v0.7.1...v0.8.0

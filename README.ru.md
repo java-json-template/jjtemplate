@@ -3,7 +3,7 @@
 [English](README.md) | [Русский](README.ru.md)
 
 [![Java](https://img.shields.io/badge/Java-11%2B-blue)](https://openjdk.org/projects/jdk/11/)
-[![GitHub Release](https://img.shields.io/github/v/release/sibmaks/jjtemplate?sort=semver)](https://github.com/sibmaks/jjtemplate/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/java-json-template/jjtemplate?sort=semver)](https://github.com/java-json-template/jjtemplate/releases)
 [![Maven](https://img.shields.io/maven-central/v/io.github.sibmaks.jjtemplate/jjtemplate?label=Maven)](https://central.sonatype.com/artifact/io.github.sibmaks.jjtemplate/jjtemplate)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sibmaks_jjtemplate&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sibmaks_jjtemplate)
@@ -11,15 +11,15 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=sibmaks_jjtemplate&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=sibmaks_jjtemplate)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sibmaks_jjtemplate&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sibmaks_jjtemplate)
 
-[![Build](https://github.com/sibmaks/jjtemplate/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/sibmaks/jjtemplate/actions/workflows/build.yml)
+[![Build](https://github.com/java-json-template/jjtemplate/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/java-json-template/jjtemplate/actions/workflows/build.yml)
 [![Javadocs](https://javadoc.io/badge2/io.github.sibmaks.jjtemplate/jjtemplate/javadoc.svg)](https://javadoc.io/doc/io.github.sibmaks.jjtemplate/jjtemplate)
-[![License](https://img.shields.io/github/license/sibmaks/jjtemplate)](https://github.com/sibmaks/jjtemplate/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/java-json-template/jjtemplate)](https://github.com/java-json-template/jjtemplate/blob/main/LICENSE)
 
 **JJTemplate** - это легковесный шаблонизатор, ориентированный на **минимальное время рендеринга** и **JSON-совместимый
 вход/выход**. **JJT** расшифровывается как **Java JSON Template**. JJTemplate компилирует шаблоны в оптимизированные
 абстрактные синтаксические деревья (AST) для быстрого выполнения, гарантируя валидный JSON в результате.
 
-Плагин IDEA: [здесь](https://github.com/sibmaks/jjtemplate-plugin).
+Плагин IDEA: [здесь](https://github.com/java-json-template/jjtemplate-plugin).
 
 ## Использование
 
