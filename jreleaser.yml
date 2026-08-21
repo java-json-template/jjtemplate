@@ -12,7 +12,7 @@ project:
       artifactId: jjtemplate
       multiProject: true
   links:
-    homepage: https://github.com/sibmaks/jjtemplate
+    homepage: https://github.com/java-json-template/jjtemplate
   tags:
     - json
     - template
@@ -21,7 +21,7 @@ project:
 
 release:
   github:
-    owner: sibmaks
+    owner: java-json-template
     name: jjtemplate
     tagName: v{{projectVersion}}
     releaseName: Release {{projectVersion}}
